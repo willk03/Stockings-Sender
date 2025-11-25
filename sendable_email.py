@@ -49,15 +49,3 @@ class SendableEmail:
                 smtp_server.quit()
 
 
-email = SendableEmail(
-    sender_email='will.kuster6@gmail.com',
-    password='cipk koqa ghcj glqo',
-    recipient_email='jasonmonaco@icloud.com',
-    subject='Test',
-    body='Hi queen\n- Will'
-)
-
-import random
-for i in range(100):
-    email.subject = f'There are {random.randint(50, 5000)} HOT singles in your area!!!'
-    email.send()
