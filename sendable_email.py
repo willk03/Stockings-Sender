@@ -2,41 +2,40 @@
 
 import smtplib
 from email.message import EmailMessage
+from typing import Optional
 
 class SendableEmail:
     """Email object"""
 
     def __init__(self, 
-                 sender_email: str, 
-                 password: str, 
+                 sender_email: Optional[str], 
+                 password: Optional[str], 
                  recipient_email: str, 
                  subject: str, 
                  body: str
                  ):
-        self._sender_email: str = sender_email
-        self._password: str = password
+        self._sender_email: Optional[str] = sender_email
+        self._password: Optional[str] = password
         self.recipient_email: str = recipient_email
         self.subject: str = subject
         self.body: str = body
 
     def send(self) -> None:
         """Send emaiil"""
+        if self._sender_email is None or self._password is None:
+            raise ValueError("Must enter sender email and password before sending.")
         message = EmailMessage()
         message.set_content(self.body)
         message["From"] = self._sender_email
         message["To"] = self.recipient_email
         message["Subject"] = self.subject
 
-        server = "smtp.gmail.com" # Example for Gmail
+        server = "smtp.gmail.com"
         port = 465 # SSL port for secure connection Use 587 for TLS
 
         try:
-            # Connect to the SMTP server (using Gmail as an example)
-            # For other providers, you'll need their specific SMTP server and port
             smtp_server = smtplib.SMTP_SSL(server, port)
             smtp_server.login(self._sender_email, self._password)
-
-            # Send the email
             smtp_server.sendmail(self._sender_email, self.recipient_email, message.as_string())
             print("Email sent successfully!")
 
@@ -48,4 +47,9 @@ class SendableEmail:
             if 'smtp_server' in locals() and smtp_server:
                 smtp_server.quit()
 
-
+    def login_from_file(self, filename: str) -> None:
+        """Login from file containing gemail/app password"""
+        with open(filename, 'r') as data:
+            login_info = data.readlines()
+            self._sender_email = login_info[0]
+            self._password = login_info[1]
