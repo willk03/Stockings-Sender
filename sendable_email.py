@@ -7,23 +7,23 @@ from typing import Optional
 class SendableEmail:
     """Email object"""
 
-    def __init__(self, 
-                 sender_email: Optional[str], 
-                 password: Optional[str], 
-                 recipient_email: str, 
-                 subject: str, 
-                 body: str
+    def __init__(self,
+                 recipient_email: str,
+                 sender_email: Optional[str] = None,
+                 password: Optional[str] = None
                  ):
         self._sender_email: Optional[str] = sender_email
         self._password: Optional[str] = password
         self.recipient_email: str = recipient_email
-        self.subject: str = subject
-        self.body: str = body
+        self.subject: Optional[str] = None
+        self.body: Optional[str] = None
 
     def send(self) -> None:
         """Send emaiil"""
         if self._sender_email is None or self._password is None:
             raise ValueError("Must enter sender email and password before sending.")
+        if self.subject is None or self.body is None:
+            raise ValueError("Must set subject and body before sending.")
         message = EmailMessage()
         message.set_content(self.body)
         message["From"] = self._sender_email
@@ -53,3 +53,11 @@ class SendableEmail:
             login_info = data.readlines()
             self._sender_email = login_info[0]
             self._password = login_info[1]
+
+    def set_subject(self, subject: str) -> None:
+        """Set the subject of the email"""
+        self.subject = subject
+
+    def set_body(self, body: str) -> None:
+        """Set the subject of the email"""
+        self.body = body
