@@ -18,9 +18,12 @@ class Person:
     def set_target(self, name: str) -> None:
         """Sets the target and email recipient"""
         self.target = name
-        self.email.set_subject('Open to get your Stocking!!')
-        self.email.set_body(f'Your stocking target is {name}! Good luck shopping!!')
+        self.email.set_subject('Stocking!!!!!')
+        self.email.set_body(f'Your stocking target is {name}! Have fun shopping!!')
 
     def send_email(self) -> None:
         """Sends email"""
         self.email.send()
+
+    def __str__(self) -> str:
+        return self.name
